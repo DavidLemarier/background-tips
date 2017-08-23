@@ -7,7 +7,7 @@
   "repository": "https://github.com/atom/background-tips",
   "license": "MIT",
   "engines": {
-    "atom": ">0.42.0"
+    "soldat": "*"
   },
   "dependencies": {
     "event-kit": "^2.2.0",

@@ -20,9 +20,9 @@ class BackgroundTipsElement
 
     @disposables = new CompositeDisposable
 
-    # TODO: Remove conditional and use atom.workspace.getCenter directly
+    # TODO: Remove conditional and use soldat.workspace.getCenter directly
     # once 1.17 lands on stable.
-    @workspaceCenter = atom.workspace.getCenter?() ? atom.workspace
+    @workspaceCenter = soldat.workspace.getCenter?() ? soldat.workspace
 
     @disposables.add @workspaceCenter.onDidAddPane => @updateVisibility()
     @disposables.add @workspaceCenter.onDidDestroyPane => @updateVisibility()
@@ -39,7 +39,7 @@ class BackgroundTipsElement
     @element.innerHTML = Template
     @message = @element.querySelector('.message')
 
-    paneView = atom.views.getView(@workspaceCenter.getActivePane())
+    paneView = soldat.views.getView(@workspaceCenter.getActivePane())
     top = paneView.querySelector('.item-views')?.offsetTop ? 0
     @element.style.top = top + 'px'
     paneView.appendChild(@element)
@@ -93,7 +93,7 @@ class BackgroundTipsElement
     str = str.replace /\{(.+)\}/g, (match, command) =>
       scopeAndCommand = command.split('>')
       [scope, command] = scopeAndCommand if scopeAndCommand.length > 1
-      bindings = atom.keymaps.findKeyBindings(command: command.trim())
+      bindings = soldat.keymaps.findKeyBindings(command: command.trim())
 
       if scope
         for binding in bindings
