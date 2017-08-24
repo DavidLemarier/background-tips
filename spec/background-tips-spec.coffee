@@ -11,19 +11,19 @@ describe "BackgroundTips", ->
   BackgroundTipsView::DisplayDuration = 5
   BackgroundTipsView::FadeDuration = 1
 
-  # TODO: Remove this after atom/atom#13977 lands in favor of unguarded `getCenter()` calls
-  getCenter = -> atom.workspace.getCenter?() ? atom.workspace
+  # TODO: Remove this after atom/atom #13977 lands in favor of unguarded `getCenter()` calls
+  getCenter = -> soldat.workspace.getCenter?() ? soldat.workspace
 
   activatePackage = (callback) ->
     waitsForPromise ->
-      atom.packages.activatePackage('background-tips').then ({mainModule}) ->
+      soldat.packages.activatePackage('background-tips').then ({mainModule}) ->
         {backgroundTipsView} = mainModule
 
     runs ->
       callback()
 
   beforeEach ->
-    workspaceElement = atom.views.getView(atom.workspace)
+    workspaceElement = soldat.views.getView(soldat.workspace)
     jasmine.attachToDOM(workspaceElement)
 
   describe "when the package is activated when there is only one pane", ->
@@ -32,7 +32,7 @@ describe "BackgroundTips", ->
 
     describe "when the pane is empty", ->
       it "attaches the view after a delay", ->
-        expect(atom.workspace.getActivePane().getItems().length).toBe 0
+        expect(soldat.workspace.getActivePane().getItems().length).toBe 0
 
         activatePackage ->
           expect(backgroundTipsView.element.parentNode).toBeFalsy()
@@ -41,7 +41,7 @@ describe "BackgroundTips", ->
 
     describe "when the pane is not empty", ->
       it "does not attach the view", ->
-        waitsForPromise -> atom.workspace.open()
+        waitsForPromise -> soldat.workspace.open()
 
         activatePackage ->
           advanceClock BackgroundTipsView::StartDelay + 1
@@ -53,12 +53,12 @@ describe "BackgroundTips", ->
           advanceClock BackgroundTipsView::StartDelay + 1
           expect(backgroundTipsView.element.parentNode).toBeTruthy()
 
-          atom.workspace.getActivePane().splitRight()
+          soldat.workspace.getActivePane().splitRight()
           expect(backgroundTipsView.element.parentNode).toBeFalsy()
 
   describe "when the package is activated when there are multiple panes", ->
     beforeEach ->
-      atom.workspace.getActivePane().splitRight()
+      soldat.workspace.getActivePane().splitRight()
       expect(getCenter().getPanes().length).toBe 2
 
     it "does not attach the view", ->
@@ -69,14 +69,14 @@ describe "BackgroundTips", ->
     describe "when all but the last pane is destroyed", ->
       it "attaches the view", ->
         activatePackage ->
-          atom.workspace.getActivePane().destroy()
+          soldat.workspace.getActivePane().destroy()
           advanceClock BackgroundTipsView::StartDelay + 1
           expect(backgroundTipsView.element.parentNode).toBeTruthy()
 
-          atom.workspace.getActivePane().splitRight()
+          soldat.workspace.getActivePane().splitRight()
           expect(backgroundTipsView.element.parentNode).toBeFalsy()
 
-          atom.workspace.getActivePane().destroy()
+          soldat.workspace.getActivePane().destroy()
           expect(backgroundTipsView.element.parentNode).toBeTruthy()
 
   describe "when the view is attached", ->
